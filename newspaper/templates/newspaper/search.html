@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <h3 align="left"><a href="/newspaper/index">Return to homepage</a></h3>
+    <h3 aligh="left"><a href="/newspaper/logout">Logout</a></h3>
+    {% if request.user.is_authenticated %}
+        <h1 align="center">Search articles</h1>
+        <form id="search_form" method="post" action=".">
+            {% csrf_token %}
+            <input type="text" name="keywords" value="" placeholder="Enter the keywords of your search" size="100"/>
+            <input type="submit" value="Search">
+        </form>
+
+        {% if articles %}
+            <h2>Results for "{{ keywords }}": </h2>
+            <ul>
+
+                {% for article in articles %}
+                    <li>
+                        <strong>Title: </strong>{{ article.1 }}<br/>
+                        <strong>By: </strong>{{ article.2 }}<br/>
+                        <strong>Id: </strong>{{ article.0 }}<br/>
+                    </li>
+
+                    <form id="favorite_form" method="post" action="/newspaper/favorites/">
+                        {% csrf_token %}
+                        {% if article.3 == False %}
+
+                            <!--<input type="hidden" name="delete_id" value=""/>-->
+
+                            <input type="hidden" name="add_id" value="{{ article.0 }}"/>
+                            <input type="submit" value="Add to favorites">
+                        {% else %}
+
+                            <input type="hidden" name="add_id" value=""/>
+
+                            <input type="hidden" name="delete_id" value="{{ article.0 }}"/>
+                            <input type="submit" value="Delete favorite">
+                        {% endif %}
+                    </form>
+
+                    <form id="detail_article" method="post" action="/newspaper/detail/">
+                        {% csrf_token %}
+                        <input type="hidden" name="id_article" value="{{ article.0 }}"/>
+                        <input type="hidden" name="previous_page" value="search"/>
+                        <input type="submit" value="More Details"/>
+                    </form>
+
+                    <br/>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <h3>You are not logged in. Please return to the <a href="/newspaper">homepage</a> and log in</h3>
+    {% endif %}
+</body>
+</html>

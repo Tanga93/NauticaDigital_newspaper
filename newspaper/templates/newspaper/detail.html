@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+        <h3 align="right"><a href="/newspaper/index">Return to homepage</a></h3>
+        <h3 align="right"><a href="/newspaper/logout">Logout</a></h3>
+
+        <h1 align="center">{{ article_title }}</h1>
+        <h3><strong>By: </strong>{{ article_author }}</h3>
+        <p align="justify">{{ article_abstract }}</p>
+
+        <form id="favorite_form" method="post" action="/newspaper/favorites/">
+            {% csrf_token %}
+            {% if is_favorite == False %}
+
+                <input type="hidden" name="delete_id" value=""/>
+
+                <input type="hidden" name="add_id" value="{{ id_article }}"/>
+                <input type="submit" value="Add to favorites">
+            {% else %}
+
+                <!--<input type="hidden" name="add_id" value=""/>-->
+
+                <input type="hidden" name="delete_id" value="{{ id_article }}"/>
+                <input type="submit" value="Delete Favorite">
+            {% endif %}
+        </form>
+
+        <br/>
+        {% if previous_page == 'favorites' %}
+            <h3><a href="/newspaper/favorites">Return to favorites page</a></h3>
+        {% elif previous_page == 'search' %}
+            <h3><a href="/newspaper/search">Return to Search page</a></h3>
+        {% endif %}
+    {% else %}
+        <h3>You are not logged in. Please return to the <a href="/newspaper">homepage</a> and log in</h3>
+    {% endif %}
+</body>
+</html>

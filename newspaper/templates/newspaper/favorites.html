@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+        <h3 align="right"><a href="/newspaper/index">Return to homepage</a></h3>
+        <h3 align="right"><a href="/newspaper/logout">Logout</a></h3>
+
+        <h1 align="center">{{ request.user.username}}'s Favorites articles</h1>
+        {% if fav_articles%}
+            <ul>
+                {% for article in fav_articles %}
+                    <li>
+                        <strong>Title: </strong>{{ article.1 }}<br/>
+                        <strong>By: </strong>{{ article.2 }}<br/>
+                        <strong>Id: </strong>{{ article.0 }}<br/>
+                    </li>
+
+                    <form id="detail_article" method="post" action="/newspaper/detail/">
+                        {% csrf_token %}
+                        <input type="hidden" name="id_article" value="{{ article.0 }}"/>
+                        <input type="hidden" name="previous_page" value="favorites"/>
+                        <input type="submit" value="More Details"/>
+                    </form>
+
+                    <br/>
+                {% endfor %}
+            </ul>
+        {% else %}
+            You don't have favorite articles yet. <a href="/newspaper">Return to homepage</a>
+        {% endif %}
+    {% else %}
+        <h3>You are not logged in. Please return to the <a href="/newspaper">homepage</a> and log in</h3>
+    {% endif %}
+</body>
+</html>

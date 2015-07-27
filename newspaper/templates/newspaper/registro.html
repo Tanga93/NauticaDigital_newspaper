@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Newspaper Register</title>
+</head>
+<body>
+    <a href="/newspaper">Return to the homepage</a><br/>
+    <h1>Register on Nautica Newspaper</h1>
+
+    {% if success %}
+        <h3>Now you can log in</h3><br/>
+    {% else %}
+        <strong>Register here!!!</strong><br/>
+        <form id="usuario_form" method="post" action="/newspaper/registro/" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{usuario_form.as_p }}
+            <input type="submit" name="register" value="Register"/>
+        </form>
+    {% endif %}
+</body>
+</html>
